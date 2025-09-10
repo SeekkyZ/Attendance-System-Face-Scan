@@ -1,0 +1,37 @@
+{
+  "name": "Face Recognition Attendance System",
+  "description": "Laravel-based attendance system with face recognition",
+  "keywords": ["laravel", "face-recognition", "attendance"],
+  "website": "https://github.com/yourusername/scan",
+  "repository": "https://github.com/yourusername/scan",
+  "logo": "https://laravel.com/img/logomark.min.svg",
+  "success_url": "/",
+  "scripts": {
+    "postdeploy": "php artisan migrate --force"
+  },
+  "env": {
+    "APP_ENV": {
+      "description": "Application environment",
+      "value": "production"
+    },
+    "APP_DEBUG": {
+      "description": "Enable debug mode",
+      "value": "false"
+    },
+    "APP_KEY": {
+      "description": "Base64 encoded application key",
+      "generator": "secret"
+    }
+  },
+  "formation": {
+    "web": {
+      "quantity": 1
+    }
+  },
+  "addons": [],
+  "buildpacks": [
+    {
+      "url": "heroku/php"
+    }
+  ]
+}
