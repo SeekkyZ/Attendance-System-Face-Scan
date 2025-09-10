@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('face_encodings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('encoding'); // เก็บ face encoding เป็น JSON
-            $table->string('image_path')->nullable(); // เส้นทางรูปภาพใบหน้า
-            $table->string('label')->nullable(); // ป้ายกำกับ เช่น "หน้าหลัก", "หน้าข้าง"
-            $table->float('confidence')->default(0); // ค่าความมั่นใจในการจดจำ
+            $table->string('name'); // ใช้ชื่อแทน user_id
+            $table->text('encoding');
+            $table->string('image_path')->nullable();
+            $table->string('label')->nullable();
+            $table->float('confidence')->default(0);
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
-            $table->index(['user_id', 'is_active']);
+            $table->index(['name', 'is_active']);
         });
     }
 

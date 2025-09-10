@@ -13,18 +13,17 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name'); // ใช้ชื่อแทน user_id
             $table->foreignId('location_id')->constrained()->onDelete('cascade');
-            $table->enum('session', ['morning', 'afternoon', 'evening', 'night']); // เช้า, กลางวัน, บ่าย, เย็น
-            $table->enum('type', ['check_in', 'check_out']); // เข้า หรือ ออก
+            $table->enum('session', ['morning', 'afternoon', 'evening', 'night']);
+            $table->enum('type', ['check_in', 'check_out']);
             $table->datetime('attendance_time');
             $table->decimal('user_latitude', 10, 8);
             $table->decimal('user_longitude', 11, 8);
-            $table->decimal('distance', 8, 2); // ระยะทางในหน่วยเมตร
+            $table->decimal('distance', 8, 2);
             $table->string('note')->nullable();
             $table->timestamps();
-            
-            $table->index(['user_id', 'attendance_time']);
+            $table->index(['name', 'attendance_time']);
             $table->index(['location_id', 'attendance_time']);
         });
     }

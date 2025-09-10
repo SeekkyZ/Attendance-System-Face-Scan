@@ -13,12 +13,11 @@ return new class extends Migration
     {
         Schema::create('user_locations', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('name'); // ใช้ชื่อแทน user_id
             $table->foreignId('location_id')->constrained()->onDelete('cascade');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            
-            $table->unique(['user_id', 'location_id']);
+            $table->unique(['name', 'location_id']);
         });
     }
 

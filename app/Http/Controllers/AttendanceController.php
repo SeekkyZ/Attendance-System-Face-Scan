@@ -10,38 +10,59 @@ use Carbon\Carbon;
 
 class AttendanceController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    // public function __construct() {}
     
     // แสดงหน้าประวัติการลงเวลา
     public function index()
     {
         return view('attendance.index');
     }
+
+    // เพิ่มฟังก์ชัน scan สำหรับ POST /attendance/scan
+    public function scan(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'location_id' => 'required|exists:locations,id',
+            'session' => 'required|in:morning,afternoon,evening,night',
+            'type' => 'required|in:check_in,check_out',
+            'attendance_time' => 'required|date',
+            'user_latitude' => 'required|numeric',
+            'user_longitude' => 'required|numeric',
+            'distance' => 'required|numeric',
+            'note' => 'nullable|string',
+        ]);
+
+        Attendance::create([
+            'name' => $request->name,
+            'location_id' => $request->location_id,
+            'session' => $request->session,
+            'type' => $request->type,
+            'attendance_time' => $request->attendance_time,
+            'user_latitude' => $request->user_latitude,
+            'user_longitude' => $request->user_longitude,
+            'distance' => $request->distance,
+            'note' => $request->note,
+        ]);
+
+        return redirect()->route('attendance.index')->with('success', 'บันทึกเวลาเรียบร้อย');
+    }
     
     // แสดงประวัติการลงเวลา
     public function history(Request $request)
     {
-        $query = Attendance::with(['location', 'user'])
-                           ->where('user_id', Auth::id())
+        $query = Attendance::with(['location'])
+                           ->where('name', $request->name)
                            ->orderBy('attendance_time', 'desc');
-        
-        // กรองตามวันที่ถ้ามี
+
         if ($request->date) {
             $query->whereDate('attendance_time', $request->date);
         }
-        
-        // กรองตามสถานที่ถ้ามี
         if ($request->location_id) {
             $query->where('location_id', $request->location_id);
         }
-        
         $attendances = $query->paginate(20);
-        $locations = Auth::user()->locations()->where('locations.is_active', true)->get();
-        
-        return view('attendance.history', compact('attendances', 'locations'));
+        return view('attendance.history', compact('attendances'));
     }
     
 
@@ -49,11 +70,12 @@ class AttendanceController extends Controller
     // ดูรายละเอียดการลงเวลาวันนี้
     public function today()
     {
-        $attendances = Attendance::with('location')
-                                ->where('user_id', Auth::id())
-                                ->whereDate('attendance_time', Carbon::today('Asia/Bangkok'))
-                                ->orderBy('attendance_time', 'asc')
-                                ->get();
+    $name = request('name');
+    $attendances = Attendance::with('location')
+                ->where('name', $name)
+                ->whereDate('attendance_time', Carbon::today('Asia/Bangkok'))
+                ->orderBy('attendance_time', 'asc')
+                ->get();
         
         return response()->json([
             'success' => true,
