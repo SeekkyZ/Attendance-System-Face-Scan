@@ -131,35 +131,12 @@
     </style>
 </head>
 <body>
-    <!-- Navigation -->
+    <!-- Navigation (no login/register) -->
     <nav class="navbar navbar-expand-lg navbar-custom fixed-top">
         <div class="container">
             <a class="navbar-brand fw-bold" href="#" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
                 <i class="fas fa-clock me-2"></i>Smart Attendance
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    @if (Route::has('login'))
-                        @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/attendance') }}">หน้าหลัก</a>
-                            </li>
-                        @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">เข้าสู่ระบบ</a>
-                            </li>
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">สมัครสมาชิก</a>
-                                </li>
-                            @endif
-                        @endauth
-                    @endif
-                </ul>
-            </div>
         </div>
     </nav>
 
@@ -179,18 +156,9 @@
                         เพื่อความแม่นยำและความปลอดภัยสูงสุด
                     </p>
                     <div class="d-flex flex-wrap gap-3 mb-4" style="position: relative; z-index: 10;">
-                        @auth
-                            <a href="{{ url('/attendance') }}" class="btn btn-custom btn-lg">
-                                <i class="fas fa-tachometer-alt me-2"></i>เข้าสู่หน้าหลัก
-                            </a>
-                        @else
-                            <a href="{{ route('register') }}" class="btn btn-custom btn-lg">
-                                <i class="fas fa-user-plus me-2"></i>เริ่มใช้งาน
-                            </a>
-                            <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg">
-                                <i class="fas fa-sign-in-alt me-2"></i>เข้าสู่ระบบ
-                            </a>
-                        @endauth
+                        <a href="#how-it-works" class="btn btn-custom btn-lg">
+                            <i class="fas fa-info-circle me-2"></i>ดูวิธีการใช้งาน
+                        </a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -365,18 +333,9 @@
         <div class="container text-center">
             <h2 class="fw-bold mb-4">พร้อมเริ่มต้นใช้งานแล้วหรือยัง?</h2>
             <p class="lead mb-4">ลองใช้ระบบบันทึกเวลาเข้าออกที่ทันสมัยที่สุดวันนี้</p>
-            @auth
-                <a href="{{ url('/attendance') }}" class="btn btn-light btn-lg me-3">
-                    <i class="fas fa-tachometer-alt me-2"></i>เข้าสู่หน้าหลัก
-                </a>
-            @else
-                <a href="{{ route('register') }}" class="btn btn-light btn-lg me-3">
-                    <i class="fas fa-user-plus me-2"></i>สมัครใช้งานฟรี
-                </a>
-                <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg">
-                    <i class="fas fa-sign-in-alt me-2"></i>เข้าสู่ระบบ
-                </a>
-            @endauth
+            <a href="#how-it-works" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-info-circle me-2"></i>ดูวิธีการใช้งาน
+            </a>
         </div>
     </section>
 

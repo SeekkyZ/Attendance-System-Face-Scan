@@ -69,6 +69,6 @@ class RegisterController extends Controller
             'password' => Hash::make($data['password']),
         ]);
     }
-
+    // ลบ RegisterController ออก (ไม่ใช้ระบบลงทะเบียน)
 
 }

@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 
 // Authentication Routes - Use default Laravel auth
-Auth::routes();
+// Auth::routes(); // ปิดระบบ login/register
 
 // Use default Laravel register view
 // Route override removed to use Laravel default
