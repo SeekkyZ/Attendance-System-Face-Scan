@@ -28,9 +28,12 @@ class RegisterController extends Controller
     /**
      * Where to redirect users after registration.
      *
-     * @var string
+     * @return string
      */
-    protected $redirectTo = '/home';
+    protected function redirectTo()
+    {
+        return '/';  // ไปหน้าหลัก (welcome) ซึ่งจะ redirect ไปที่ attendance.index เมื่อ login แล้ว
+    }
 
     /**
      * Create a new controller instance.
@@ -99,30 +102,36 @@ class RegisterController extends Controller
      * Handle a registration request for the application.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function register(Request $request)
     {
         try {
+            // Validate the request
             $this->validator($request->all())->validate();
 
-            event(new \Illuminate\Auth\Events\Registered($user = $this->create($request->all())));
+            // Create the user
+            $user = $this->create($request->all());
 
-            $this->guard()->login($user);
+            // Fire the registered event
+            event(new \Illuminate\Auth\Events\Registered($user));
 
-            if ($response = $this->registered($request, $user)) {
-                return $response;
-            }
+            // Login the user
+            auth()->login($user);
 
-            return $request->wantsJson()
-                        ? new \Illuminate\Http\JsonResponse([], 201)
-                        : redirect($this->redirectPath())->with('success', 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับ');
+            // Redirect with success message
+            return redirect('/')->with('success', 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับเข้าสู่ระบบ');
 
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withErrors($e->validator)->withInput();
+            return back()->withErrors($e->validator)->withInput()->withInput();
+            
         } catch (\Exception $e) {
             Log::error('Registration error: ' . $e->getMessage());
-            return back()->withError('เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง')->withInput();
+            Log::error('Registration error trace: ' . $e->getTraceAsString());
+            
+            return back()
+                ->withInput()
+                ->with('error', 'เกิดข้อผิดพลาดในการสมัครสมาชิก: ' . $e->getMessage());
         }
     }
 }

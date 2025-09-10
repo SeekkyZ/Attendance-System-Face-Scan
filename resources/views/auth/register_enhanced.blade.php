@@ -30,7 +30,6 @@
 
                     <form method="POST" action="{{ route('register') }}" id="registerForm">
                         @csrf
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}" id="csrfToken">
 
                         <div class="row mb-3">
                             <label for="name" class="col-md-4 col-form-label text-md-end">
@@ -159,29 +158,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('registerForm');
     const submitBtn = document.getElementById('submitBtn');
     
-    // Refresh CSRF token before form submission
-    form.addEventListener('submit', async function(e) {
-        e.preventDefault();
+    // Simple loading indicator
+    form.addEventListener('submit', function(e) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>กำลังสมัครสมาชิก...';
         
-        try {
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>กำลังสมัครสมาชิก...';
-            
-            // Get fresh CSRF token
-            const tokenResponse = await fetch('/api/csrf-token');
-            if (tokenResponse.ok) {
-                const tokenData = await tokenResponse.json();
-                document.getElementById('csrfToken').value = tokenData.token;
-                document.querySelector('meta[name="csrf-token"]').setAttribute('content', tokenData.token);
-            }
-            
-            // Submit form
-            form.submit();
-        } catch (error) {
-            console.error('Error refreshing CSRF token:', error);
-            // Submit anyway with existing token
-            form.submit();
-        }
+        // Re-enable after 10 seconds in case of issues
+        setTimeout(function() {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-user-plus me-1"></i>สมัครสมาชิก';
+        }, 10000);
     });
 });
 </script>
