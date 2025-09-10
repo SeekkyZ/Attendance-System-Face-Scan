@@ -64,12 +64,6 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{location}/remove-user', [LocationController::class, 'removeUser'])->name('remove-user');
     });
     
-    // Home redirect
-    Route::get('/home', function () {
-        return redirect()->route('attendance.index');
-    });
+    // Home redirect - use HomeController for consistency
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });
-
-Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

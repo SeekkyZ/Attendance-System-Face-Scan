@@ -275,20 +275,12 @@ class FaceRegister {
             // แปลง canvas เป็น base64
             const imageData = this.canvas.toDataURL('image/png');
             
-            // เตรียม CSRF token
-            let csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-            if (!csrfToken) {
-                this.showStatus('ไม่พบ CSRF token กรุณารีเฟรชหน้าเว็บ', 'warning');
-                return;
-            }
-
             // ส่งข้อมูลไปยังเซิร์ฟเวอร์
             const response = await fetch('{{ route("face.register.store") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json'
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
                 },
                 body: JSON.stringify({
                     encoding: Array.from(this.currentDetection.descriptor),
