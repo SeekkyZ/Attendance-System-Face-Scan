@@ -45,12 +45,12 @@ return [
 
         'mysql' => [
             'driver' => 'mysql',
-            'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', 'trolley.proxy.rlwy.net'),
-            'port' => env('DB_PORT', '55032'),
-            'database' => env('DB_DATABASE', 'railway'),
-            'username' => env('DB_USERNAME', 'root'),
-            'password' => env('DB_PASSWORD', 'qiDniDwxtgurfonOgoZeDSogeWXrSGrI'),
+            'url' => null,
+            'host' => 'trolley.proxy.rlwy.net',
+            'port' => '55032',
+            'database' => 'railway',
+            'username' => 'root',
+            'password' => 'qiDniDwxtgurfonOgoZeDSogeWXrSGrI',
             'unix_socket' => env('DB_SOCKET', ''),
             'charset' => 'utf8mb4',
             'collation' => 'utf8mb4_unicode_ci',
