@@ -12,6 +12,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        // เรียก UserSeeder เพื่อสร้างผู้ใช้ทดสอบ
+        $this->call(UserSeeder::class);
+        
         // เรียก UserLocationSeeder เพื่อให้ผู้ใช้มีสิทธิ์เข้าถึงสถานที่
         $this->call(UserLocationSeeder::class);
     }
