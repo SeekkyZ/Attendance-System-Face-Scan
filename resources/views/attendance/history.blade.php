@@ -37,7 +37,44 @@
                             </div>
                         </div>
                     </form>
-
+                                                    <div class="container py-5">
+                                                        <div class="row justify-content-center">
+                                                            <div class="col-md-8">
+                                                                <div class="card shadow">
+                                                                    <div class="card-header bg-info text-white">
+                                                                        <h5 class="mb-0">
+                                                                            <i class="fas fa-history me-2"></i>ประวัติการลงเวลา
+                                                                        </h5>
+                                                                    </div>
+                                                                    <div class="card-body">
+                                                                        <form method="GET" action="{{ url('/attendance/history') }}">
+                                                                            <div class="mb-3">
+                                                                                <label for="name" class="form-label">กรอกชื่อ-นามสกุลเพื่อดูประวัติ</label>
+                                                                                <input type="text" class="form-control" id="name" name="name" required placeholder="ชื่อ-นามสกุล">
+                                                                            </div>
+                                                                            <button type="submit" class="btn btn-primary">
+                                                                                <i class="fas fa-search me-1"></i> ค้นหาประวัติ
+                                                                            </button>
+                                                                        </form>
+                                                                        <!-- ส่วนแสดงประวัติ (ดึงข้อมูลตามชื่อ) -->
+                                                                        @if(isset($attendances))
+                                                                            <hr>
+                                                                            <h6>ประวัติของ {{ request('name') }}</h6>
+                                                                            <ul class="list-group">
+                                                                                @forelse($attendances as $attendance)
+                                                                                    <li class="list-group-item">
+                                                                                        {{ $attendance->created_at }} - {{ $attendance->status }}
+                                                                                    </li>
+                                                                                @empty
+                                                                                    <li class="list-group-item">ไม่พบข้อมูล</li>
+                                                                                @endforelse
+                                                                            </ul>
+                                                                        @endif
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                     <!-- Attendance List -->
                     @if($attendances->count() > 0)
                     <div class="table-responsive">

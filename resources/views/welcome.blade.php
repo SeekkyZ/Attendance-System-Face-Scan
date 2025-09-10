@@ -156,8 +156,8 @@
                         เพื่อความแม่นยำและความปลอดภัยสูงสุด
                     </p>
                     <div class="d-flex flex-wrap gap-3 mb-4" style="position: relative; z-index: 10;">
-                        <a href="#how-it-works" class="btn btn-custom btn-lg">
-                            <i class="fas fa-info-circle me-2"></i>ดูวิธีการใช้งาน
+                        <a href="/attendance" class="btn btn-custom btn-lg">
+                            <i class="fas fa-tachometer-alt me-2"></i>เข้าสู่หน้าลงเวลาเข้าออก
                         </a>
                     </div>
                 </div>
@@ -333,8 +333,8 @@
         <div class="container text-center">
             <h2 class="fw-bold mb-4">พร้อมเริ่มต้นใช้งานแล้วหรือยัง?</h2>
             <p class="lead mb-4">ลองใช้ระบบบันทึกเวลาเข้าออกที่ทันสมัยที่สุดวันนี้</p>
-            <a href="#how-it-works" class="btn btn-light btn-lg me-3">
-                <i class="fas fa-info-circle me-2"></i>ดูวิธีการใช้งาน
+            <a href="/attendance" class="btn btn-light btn-lg me-3">
+                <i class="fas fa-tachometer-alt me-2"></i>เข้าสู่หน้าลงเวลาเข้าออก
             </a>
         </div>
     </section>

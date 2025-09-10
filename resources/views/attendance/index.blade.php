@@ -25,15 +25,31 @@
                     <!-- Location Info -->
                     <div id="location-info" class="card bg-light mb-4" style="display: none;">
                         <div class="card-body">
-                            <h6 class="card-title">
-                                <i class="fas fa-info-circle me-1"></i>ข้อมูลสถานที่
-                            </h6>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <small class="text-muted">ระยะทาง:</small>
-                                    <div id="location-distance">-</div>
-                                </div>
-                                <div class="col-md-6">
+                                        <div class="container py-5">
+                                            <div class="row justify-content-center">
+                                                <div class="col-md-8">
+                                                    <div class="card shadow">
+                                                        <div class="card-header bg-primary text-white">
+                                                            <h5 class="mb-0">
+                                                                <i class="fas fa-user-check me-2"></i>ลงเวลาเข้าออก
+                                                            </h5>
+                                                        </div>
+                                                        <div class="card-body">
+                                                            <form method="POST" action="{{ url('/attendance/scan') }}">
+                                                                @csrf
+                                                                <div class="mb-3">
+                                                                    <label for="name" class="form-label">กรอกชื่อ-นามสกุล</label>
+                                                                    <input type="text" class="form-control" id="name" name="name" required placeholder="ชื่อ-นามสกุล">
+                                                                </div>
+                                                                <button type="submit" class="btn btn-success">
+                                                                    <i class="fas fa-camera me-1"></i> สแกนใบหน้าเพื่อบันทึกเวลา
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     <small class="text-muted">สถานะ:</small>
                                     <div id="location-status-text">-</div>
                                 </div>
