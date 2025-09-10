@@ -7,6 +7,8 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -26,12 +28,9 @@ class RegisterController extends Controller
     /**
      * Where to redirect users after registration.
      *
-     * @return string
+     * @var string
      */
-    public function redirectTo()
-    {
-        return route('attendance.index');
-    }
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -66,10 +65,23 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        try {
+            // ทดสอบ database connection ก่อน
+            DB::connection()->getPdo();
+            
+            return User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => Hash::make($data['password']),
+            ]);
+        } catch (\Exception $e) {
+            Log::error('User creation error: ' . $e->getMessage());
+            Log::error('User creation data: ' . json_encode([
+                'name' => $data['name'],
+                'email' => $data['email']
+            ]));
+            Log::error('Stack trace: ' . $e->getTraceAsString());
+            throw $e;
+        }
     }
 }
