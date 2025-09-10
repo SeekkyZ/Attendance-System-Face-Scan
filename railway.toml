@@ -1,7 +1,0 @@
-[build]
-builder = "heroku/buildpacks:20"
-
-[deploy]
-healthcheckPath = "/"
-healthcheckTimeout = 300
-restartPolicyType = "ON_FAILURE"
