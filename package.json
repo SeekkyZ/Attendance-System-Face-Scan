@@ -3,9 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
-        "heroku-postbuild": "npm run build",
-        "production": "npm run build"
+        "build": "vite build && echo 'Build completed successfully'",
+        "production": "vite build"
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.6",
