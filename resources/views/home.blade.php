@@ -278,8 +278,12 @@ class HomePageManager {
     constructor() {
         this.timeInterval = null;
         this.initializeDateTime();
-        this.loadTodayStatus();
-        this.loadAvailableLocations();
+        
+        // เพิ่ม delay เล็กน้อยเพื่อให้ session พร้อม
+        setTimeout(() => {
+            this.loadTodayStatus();
+            this.loadAvailableLocations();
+        }, 500);
     }
     
     initializeDateTime() {
@@ -313,7 +317,13 @@ class HomePageManager {
     
     async loadTodayStatus() {
         try {
-            const response = await fetch('/attendance/today');
+            const response = await fetch('{{ route("attendance.today") }}', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
             const result = await response.json();
             
             const container = document.getElementById('today-status');
@@ -353,13 +363,24 @@ class HomePageManager {
                 container.innerHTML = '<p class="text-muted text-center mb-0">ยังไม่มีการลงเวลาวันนี้</p>';
             }
         } catch (error) {
-            document.getElementById('today-status').innerHTML = '<p class="text-danger text-center mb-0">ไม่สามารถโหลดข้อมูลได้</p>';
+            console.error('Error loading today status:', error);
+            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                document.getElementById('today-status').innerHTML = '<p class="text-warning text-center mb-0">กำลังโหลด...</p>';
+            } else {
+                document.getElementById('today-status').innerHTML = '<p class="text-danger text-center mb-0">ไม่สามารถโหลดข้อมูลได้</p>';
+            }
         }
     }
     
     async loadAvailableLocations() {
         try {
-            const response = await fetch('/face/locations');
+            const response = await fetch('{{ route("face.locations") }}', {
+                method: 'GET',
+                headers: {
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            });
             const result = await response.json();
             
             const container = document.getElementById('available-locations');
@@ -388,7 +409,12 @@ class HomePageManager {
                 container.innerHTML = '<p class="text-muted text-center mb-0">ไม่มีสถานที่ที่เข้าถึงได้</p>';
             }
         } catch (error) {
-            document.getElementById('available-locations').innerHTML = '<p class="text-danger text-center mb-0">ไม่สามารถโหลดข้อมูลได้</p>';
+            console.error('Error loading locations:', error);
+            if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                document.getElementById('available-locations').innerHTML = '<p class="text-warning text-center mb-0">กำลังโหลด...</p>';
+            } else {
+                document.getElementById('available-locations').innerHTML = '<p class="text-danger text-center mb-0">ไม่สามารถโหลดข้อมูลได้</p>';
+            }
         }
     }
     
