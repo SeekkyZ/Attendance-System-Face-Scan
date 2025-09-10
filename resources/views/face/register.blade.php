@@ -276,7 +276,7 @@ class FaceRegister {
             const imageData = this.canvas.toDataURL('image/png');
             
             // ส่งข้อมูลไปยังเซิร์ฟเวอร์
-            const response = await fetch('/face/register', {
+            const response = await fetch('{{ route("face.register.store") }}', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -289,6 +289,14 @@ class FaceRegister {
                 })
             });
             
+            if (!response.ok) {
+                if (response.status === 419) {
+                    this.showStatus('Session หมดอายุ กรุณารีเฟรชหน้าเว็บ', 'warning');
+                    return;
+                }
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
             const result = await response.json();
             
             if (result.success) {
@@ -300,12 +308,16 @@ class FaceRegister {
                     window.location.reload();
                 }, 2000);
             } else {
-                this.showStatus(result.message, 'danger');
+                this.showStatus(result.message || 'เกิดข้อผิดพลาด', 'danger');
             }
             
         } catch (error) {
             console.error('Capture error:', error);
-            this.showStatus('เกิดข้อผิดพลาดในการบันทึก', 'danger');
+            if (error.message.includes('419')) {
+                this.showStatus('Session หมดอายุ กรุณารีเฟรชหน้าเว็บ', 'warning');
+            } else {
+                this.showStatus('เกิดข้อผิดพลาดในการบันทึก: ' + error.message, 'danger');
+            }
         }
     }
     
