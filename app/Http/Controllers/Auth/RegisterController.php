@@ -7,8 +7,6 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\DB;
 
 class RegisterController extends Controller
 {
@@ -28,12 +26,9 @@ class RegisterController extends Controller
     /**
      * Where to redirect users after registration.
      *
-     * @return string
+     * @var string
      */
-    protected function redirectTo()
-    {
-        return '/';  // ไปหน้าหลัก (welcome) ซึ่งจะ redirect ไปที่ attendance.index เมื่อ login แล้ว
-    }
+    protected $redirectTo = '/';
 
     /**
      * Create a new controller instance.
@@ -43,16 +38,6 @@ class RegisterController extends Controller
     public function __construct()
     {
         $this->middleware('guest');
-    }
-
-    /**
-     * Show the application registration form.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function showRegistrationForm()
-    {
-        return view('auth.register_enhanced');
     }
 
     /**
@@ -78,60 +63,12 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        try {
-            // ทดสอบ database connection ก่อน
-            DB::connection()->getPdo();
-            
-            return User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-            ]);
-        } catch (\Exception $e) {
-            Log::error('User creation error: ' . $e->getMessage());
-            Log::error('User creation data: ' . json_encode([
-                'name' => $data['name'],
-                'email' => $data['email']
-            ]));
-            Log::error('Stack trace: ' . $e->getTraceAsString());
-            throw $e;
-        }
+        return User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+        ]);
     }
 
-    /**
-     * Handle a registration request for the application.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function register(Request $request)
-    {
-        try {
-            // Validate the request
-            $this->validator($request->all())->validate();
 
-            // Create the user
-            $user = $this->create($request->all());
-
-            // Fire the registered event
-            event(new \Illuminate\Auth\Events\Registered($user));
-
-            // Login the user
-            auth()->login($user);
-
-            // Redirect with success message
-            return redirect('/')->with('success', 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับเข้าสู่ระบบ');
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return back()->withErrors($e->validator)->withInput()->withInput();
-            
-        } catch (\Exception $e) {
-            Log::error('Registration error: ' . $e->getMessage());
-            Log::error('Registration error trace: ' . $e->getTraceAsString());
-            
-            return back()
-                ->withInput()
-                ->with('error', 'เกิดข้อผิดพลาดในการสมัครสมาชิก: ' . $e->getMessage());
-        }
-    }
 }
