@@ -43,6 +43,16 @@ class RegisterController extends Controller
     }
 
     /**
+     * Show the application registration form.
+     *
+     * @return \Illuminate\View\View
+     */
+    public function showRegistrationForm()
+    {
+        return view('auth.register_enhanced');
+    }
+
+    /**
      * Get a validator for an incoming registration request.
      *
      * @param  array  $data
@@ -82,6 +92,37 @@ class RegisterController extends Controller
             ]));
             Log::error('Stack trace: ' . $e->getTraceAsString());
             throw $e;
+        }
+    }
+
+    /**
+     * Handle a registration request for the application.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     */
+    public function register(Request $request)
+    {
+        try {
+            $this->validator($request->all())->validate();
+
+            event(new \Illuminate\Auth\Events\Registered($user = $this->create($request->all())));
+
+            $this->guard()->login($user);
+
+            if ($response = $this->registered($request, $user)) {
+                return $response;
+            }
+
+            return $request->wantsJson()
+                        ? new \Illuminate\Http\JsonResponse([], 201)
+                        : redirect($this->redirectPath())->with('success', 'สมัครสมาชิกสำเร็จ! ยินดีต้อนรับ');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return back()->withErrors($e->validator)->withInput();
+        } catch (\Exception $e) {
+            Log::error('Registration error: ' . $e->getMessage());
+            return back()->withError('เกิดข้อผิดพลาดในการสมัครสมาชิก กรุณาลองใหม่อีกครั้ง')->withInput();
         }
     }
 }
