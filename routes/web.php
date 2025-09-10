@@ -29,10 +29,8 @@ Route::get('/', function () {
 // Authentication Routes - Use default Laravel auth
 Auth::routes();
 
-// Override register routes to use enhanced form
-Route::get('register', function() {
-    return view('auth.register_enhanced');
-})->name('register')->middleware('guest');
+// Use default Laravel register view
+// Route override removed to use Laravel default
 
 Route::middleware('auth')->group(function () {
     // Attendance Routes
